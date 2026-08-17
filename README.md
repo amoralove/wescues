@@ -65,15 +65,37 @@ seconds, with no manual function call.
 plain `update flagged_listings set status = 'confirmed_duplicate' | 'dismissed' where id = ...`
 — RLS already restricts that update to admins, so no separate RPC was needed.
 
+**Taking a listing down:** confirming a flag doesn't auto-hide anything —
+a hash match alone doesn't say *which* dog (if either) is the fraudulent
+one, and auto-hiding a legitimate shelter's real listing would be worse
+than the duplicate itself. Instead, `set_dog_hidden(dog_id, hidden, reason)`
+lets a `platform_admin` (or the owning shelter, correcting its own
+duplicate entry) explicitly hide a specific listing after review. Hidden
+dogs (and their photos) drop out of the public `dogs`/`dog_photos` reads
+but stay visible to their own shelter and to admins — verified by hiding
+a dog directly and confirming it disappeared from an anon-key read while
+the rest of the seed data stayed visible.
+
+**Security fix along the way:** the original "users can update their own
+profile" policy restricted which *row* a user could touch but not which
+*columns* — any authenticated user could have PATCHed their own `role` to
+`platform_admin` or `shelter_id` to someone else's shelter. Closed with a
+column-level grant: `authenticated` can now only `UPDATE full_name` on
+`profiles` directly; `role`/`shelter_id` only change via the
+security-definer `create_shelter` RPC. Confirmed via
+`information_schema.column_privileges` that `authenticated` has no
+`UPDATE` grant on `role` or `shelter_id`.
+
 **Known gaps:**
 - Only decodes JPEG today — PNG support needs a pure-JS PNG decoder added
   alongside `jpeg-js`.
 - `hash_and_flag_photo`'s duplicate search is a full table scan per photo
   (fine at seed-data scale; would want an index — e.g. pgvector's Hamming
   distance support — once there are many thousands of photos).
-- Confirming a flag doesn't yet do anything to the underlying `dogs` row
-  (e.g. auto-hiding a confirmed-duplicate listing) — deferred until there's
-  a real product decision on what should happen to the listing itself.
+- `set_dog_hidden`'s authorization path (admin-or-owning-shelter) and the
+  profile column lock are both verified at the schema/privilege level, but
+  not yet through a real authenticated session — there's no signup/login
+  flow yet to produce one.
 
 ### Local setup
 
