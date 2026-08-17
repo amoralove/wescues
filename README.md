@@ -23,7 +23,8 @@ Security). Schema lives in `supabase/migrations/`.
   `status` a shelter can move through `submitted` → `reviewing` →
   `approved`/`rejected`.
 - `flagged_listings` — pairs of `dog_photos` flagged as likely duplicates,
-  for moderation.
+  for moderation. `flagged_listings_detail` is a view joining in both
+  sides' dog/shelter/photo info for a review UI.
 
 **Access model (Row Level Security)**
 
@@ -49,16 +50,30 @@ photo hashes (Hamming distance, threshold 10 of 64 bits) and records any
 close match in `flagged_listings` for a moderator to review — it never
 auto-rejects, since legitimate lookalikes happen.
 
-The Edge Function is invoked manually per photo for now
-(`POST /functions/v1/hash-photo` with `{"photo_id": "<uuid>"}`); it isn't
-yet wired to run automatically when a shelter uploads a photo. It also
-only decodes JPEG today — PNG support needs a pure-JS PNG decoder added
-alongside `jpeg-js`.
+**Upload path:** photos go into the public `dog-photos` Storage bucket,
+under `<shelter_id>/<filename>` — RLS on `storage.objects` only lets a
+shelter's staff write into their own folder. After uploading, the client
+inserts the resulting URL into `dog_photos`; an `AFTER INSERT` trigger
+(`dog_photos_hash_on_insert`) then calls the `hash-photo` Edge Function
+via `pg_net` automatically, so hashing and duplicate-flagging happen
+without any extra step. Verified end-to-end by inserting a photo that
+reused an existing dog's exact image — it was hashed and flagged within
+seconds, with no manual function call.
+
+**Reviewing flags:** a `platform_admin` reads `flagged_listings_detail`
+(joins in both dogs, shelters, and photo URLs) and resolves a flag with a
+plain `update flagged_listings set status = 'confirmed_duplicate' | 'dismissed' where id = ...`
+— RLS already restricts that update to admins, so no separate RPC was needed.
 
 **Known gaps:**
-- No automatic trigger yet on photo upload (needs a DB webhook or storage
-  trigger calling the Edge Function — deferred pending the real upload flow).
-- PNG photos aren't hashed yet (JPEG only).
+- Only decodes JPEG today — PNG support needs a pure-JS PNG decoder added
+  alongside `jpeg-js`.
+- `hash_and_flag_photo`'s duplicate search is a full table scan per photo
+  (fine at seed-data scale; would want an index — e.g. pgvector's Hamming
+  distance support — once there are many thousands of photos).
+- Confirming a flag doesn't yet do anything to the underlying `dogs` row
+  (e.g. auto-hiding a confirmed-duplicate listing) — deferred until there's
+  a real product decision on what should happen to the listing itself.
 
 ### Local setup
 
