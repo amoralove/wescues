@@ -101,10 +101,43 @@ security-definer `create_shelter` RPC. Confirmed via
 - `hash_and_flag_photo`'s duplicate search is a full table scan per photo
   (fine at seed-data scale; would want an index — e.g. pgvector's Hamming
   distance support — once there are many thousands of photos).
-- `set_dog_hidden`'s authorization path (admin-or-owning-shelter) and the
-  profile column lock are both verified at the schema/privilege level, but
-  not yet through a real authenticated session — there's no signup/login
-  flow yet to produce one.
+
+All of the above (`create_shelter`, `set_dog_hidden` authorization for
+owner/non-owner/admin, the profile column lock, `flagged_listings_detail`
+visibility) has been verified against real authenticated sessions — see
+`index.html`/`app.js` in Frontend, above.
+
+### Keeping listings current: 2-month check-ins
+
+A dog whose listing hasn't been confirmed by its shelter in ~2 months gets
+an email (`send-dog-checkin` Edge Function, via [Resend](https://resend.com))
+with two one-click links — "still available" or "adopted" — that hit the
+public `respond-dog-checkin` Edge Function (token-authorized, no login, so
+it's one click from the inbox). "Adopted" updates `dogs.status`; "still
+available" just bumps `dogs.last_confirmed_at`, resetting the clock.
+
+If neither link is clicked within a 14-day grace period, the listing is
+hidden via the same `set_dog_hidden` mechanism used for confirmed
+duplicates — reversible, and doesn't cascade-delete the dog's application
+history over one missed email. A real hard-delete could run later as a
+separate cleanup pass over long-hidden dogs, if wanted.
+
+Two `pg_cron` jobs (daily) drive this: `start_due_dog_checkins()` opens a
+check-in (and emails it) for every eligible dog that doesn't already have
+one pending; `expire_dog_checkins()` expires and hides the ones that timed
+out. Both `dogs.status = 'available'` dogs only — adopted/hidden dogs are
+never checked.
+
+**Setup:** requires a Resend account and `supabase secrets set RESEND_API_KEY=<key>`.
+Without a verified sending domain, Resend's sandbox only delivers to the
+account's own email — fine for testing, not for real shelters at launch.
+
+**Known gaps:**
+- No delivery-failure handling: if the Resend call fails, the check-in
+  cycle still burns down toward "hidden" since it's already recorded as
+  sent when the cron job fires it off (`pg_net` calls are async/fire-and-forget).
+- No reminder before the 14-day expiry — it's silent until either a
+  response or the hide.
 
 ### Local setup
 
