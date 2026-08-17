@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wescues</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+  }
+}
+</script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">🐾 Wescues</div>
+    <div id="sessionStatus" class="session-status">Not signed in</div>
+  </header>
+
+  <main class="auth-main">
+    <section class="card" id="authCard">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="login">Log in</button>
+        <button class="tab-btn" data-tab="signup">Sign up</button>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <label>Email <input type="email" name="email" required></label>
+        <label>Password <input type="password" name="password" required></label>
+        <button type="submit" class="primary-btn">Log in</button>
+      </form>
+
+      <form id="signupForm" class="auth-form hidden">
+        <label>Full name <input type="text" name="full_name"></label>
+        <label>Email <input type="email" name="email" required></label>
+        <label>Password <input type="password" name="password" required minlength="6"></label>
+        <button type="submit" class="primary-btn">Sign up</button>
+      </form>
+
+      <p id="authMessage" class="auth-message"></p>
+    </section>
+
+    <section class="card hidden" id="profileCard">
+      <h2>Signed in</h2>
+      <dl id="profileDetails" class="profile-details"></dl>
+      <button id="logoutBtn" class="secondary-btn">Log out</button>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

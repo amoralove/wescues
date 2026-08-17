@@ -3,6 +3,15 @@
 A platform that aggregates animal shelter listings in one place, instead of
 each shelter's dogs being scattered across their own separate sites.
 
+## Frontend
+
+`index.html` / `app.js` / `style.css` — a minimal signup/login page (no
+build step, `@supabase/supabase-js` via CDN import map, matching the rest
+of this repo's style). Right now it's a real starting point for the
+frontend and also the harness used to verify the backend's auth-gated
+behavior end-to-end. Serve with `npx serve .` (or the `dog-park-static`
+launch config).
+
 ## Backend
 
 Backend is [Supabase](https://supabase.com) (Postgres + Auth + Row Level
