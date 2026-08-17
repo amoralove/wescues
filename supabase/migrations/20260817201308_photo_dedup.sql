@@ -6,6 +6,7 @@ alter table profiles drop constraint profiles_role_check;
 alter table profiles add constraint profiles_role_check
   check (role in ('adopter', 'shelter_staff', 'platform_admin'));
 
+-- Helper: whether the calling user is a platform_admin.
 create function is_platform_admin()
 returns boolean
 language sql

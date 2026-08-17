@@ -65,6 +65,7 @@ create table dogs (
 create index dogs_shelter_id_idx on dogs (shelter_id);
 create index dogs_status_idx on dogs (status);
 
+-- Keeps dogs.updated_at current on every edit.
 create function set_updated_at()
 returns trigger
 language plpgsql

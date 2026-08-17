@@ -43,6 +43,8 @@ create policy "platform admins can view all dog photos"
   to authenticated
   using (is_platform_admin());
 
+-- Hide/unhide a listing. Callable by a platform_admin, or by the dog's own
+-- owning shelter (e.g. correcting their own duplicate entry).
 create function set_dog_hidden(p_dog_id uuid, p_hidden boolean, p_reason text default null)
 returns dogs
 language plpgsql
