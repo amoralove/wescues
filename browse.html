@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wescues — Browse</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+  }
+}
+</script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">🐾 Wescues</div>
+    <a href="index.html" class="session-status" style="color: inherit; text-decoration: underline;">Log in / Sign up</a>
+  </header>
+
+  <main class="browse-main">
+    <div class="filters">
+      <input type="text" id="breedFilter" placeholder="Search breed…">
+      <select id="sizeFilter">
+        <option value="">Any size</option>
+        <option value="small">Small</option>
+        <option value="medium">Medium</option>
+        <option value="large">Large</option>
+      </select>
+    </div>
+
+    <p id="resultCount" class="result-count"></p>
+
+    <div id="dogGrid" class="dog-grid"></div>
+  </main>
+
+  <div class="modal-overlay" id="dogModalOverlay">
+    <div class="modal">
+      <button class="close-btn" id="closeModalBtn">&times;</button>
+      <img id="modalPhoto" class="modal-photo" alt="">
+      <h2 id="modalName"></h2>
+      <p id="modalMeta" class="modal-meta"></p>
+      <p id="modalShelter" class="modal-shelter"></p>
+      <p id="modalDescription"></p>
+    </div>
+  </div>
+
+  <script type="module" src="browse.js"></script>
+</body>
+</html>
