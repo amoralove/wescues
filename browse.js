@@ -1,9 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
+import { initNav } from "./nav.js";
 
 const SUPABASE_URL = "https://lgpgrxhswhcfliroklio.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxncGdyeGhzd2hjZmxpcm9rbGlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5OTA2MTQsImV4cCI6MjEwMjU2NjYxNH0.IRzWzb7rTm_D-IVSwQlVqh1-4HvKBVKyzUYhCBx_CXk";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+initNav(supabase);
 
 const dogGrid = document.getElementById("dogGrid");
 const resultCount = document.getElementById("resultCount");
@@ -17,6 +19,7 @@ async function loadDogs() {
     .from("dogs")
     .select("id, name, breed, age_months, sex, size, description, shelters(name, city, state), dog_photos(url)")
     .eq("status", "available")
+    .is("hidden_at", null)
     .order("created_at", { ascending: false });
 
   if (error) {
