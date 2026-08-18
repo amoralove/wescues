@@ -106,6 +106,23 @@ body {
   margin-top: 1rem;
 }
 
+.danger-btn {
+  display: block;
+  background: none;
+  border: 1px solid #b5432c;
+  color: #b5432c;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  margin: 0.4rem auto 0;
+  font-size: 0.8rem;
+}
+
+.danger-btn:hover {
+  background: #b5432c;
+  color: #fff;
+}
+
 .link-btn {
   background: none;
   border: none;

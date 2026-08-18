@@ -77,6 +77,7 @@ function renderFlags(flags) {
         <button class="${flag.dog_hidden_at ? "primary-btn" : "secondary-btn"} hide-btn" data-dog-id="${flag.dog_id}" data-dog-name="${flag.dog_name}" data-other-name="${flag.matched_dog_name}" data-hidden="${!!flag.dog_hidden_at}">
           ${flag.dog_hidden_at ? `↺ Restore ${flag.dog_name}'s listing` : `Hide ${flag.dog_name}'s listing`}
         </button>
+        <button class="danger-btn delete-btn" data-dog-id="${flag.dog_id}" data-dog-name="${flag.dog_name}">Delete ${flag.dog_name} permanently</button>
       </div>
       <div class="flag-meta">
         <p>Hamming distance: ${flag.hamming_distance}</p>
@@ -91,6 +92,7 @@ function renderFlags(flags) {
         <button class="${flag.matched_dog_hidden_at ? "primary-btn" : "secondary-btn"} hide-btn" data-dog-id="${flag.matched_dog_id}" data-dog-name="${flag.matched_dog_name}" data-other-name="${flag.dog_name}" data-hidden="${!!flag.matched_dog_hidden_at}">
           ${flag.matched_dog_hidden_at ? `↺ Restore ${flag.matched_dog_name}'s listing` : `Hide ${flag.matched_dog_name}'s listing`}
         </button>
+        <button class="danger-btn delete-btn" data-dog-id="${flag.matched_dog_id}" data-dog-name="${flag.matched_dog_name}">Delete ${flag.matched_dog_name} permanently</button>
       </div>
     `;
 
@@ -107,6 +109,10 @@ function renderFlags(flags) {
           actionMessage,
         ),
       );
+    });
+
+    row.querySelectorAll(".delete-btn").forEach((btn) => {
+      attachDeleteHandler(btn, actionMessage);
     });
 
     const dismissBtn = row.querySelector(".dismiss-btn");
@@ -133,6 +139,38 @@ async function toggleHidden(flagId, dogId, dogName, otherName, currentlyHidden, 
 
   if (nextHidden) {
     await supabase.from("flagged_listings").update({ status: "confirmed_duplicate" }).eq("id", flagId);
+  }
+
+  loadFlags();
+}
+
+// Two-step in-page confirm instead of a native confirm() dialog -- not
+// every embedding context allows native dialogs, and this is easier to
+// style/test consistently anyway.
+function attachDeleteHandler(btn, actionMessage) {
+  const { dogId, dogName } = btn.dataset;
+  const originalText = btn.textContent;
+
+  btn.addEventListener("click", () => {
+    if (btn.dataset.confirming !== "true") {
+      btn.dataset.confirming = "true";
+      btn.textContent = `Are you sure? Click to confirm deleting ${dogName}`;
+      return;
+    }
+    deleteDog(dogId, dogName, actionMessage, btn, originalText);
+  });
+}
+
+async function deleteDog(dogId, dogName, actionMessage, btn, originalText) {
+  btn.disabled = true;
+  const { error } = await supabase.from("dogs").delete().eq("id", dogId);
+
+  if (error) {
+    actionMessage.textContent = `Couldn't delete ${dogName}: ${error.message}`;
+    btn.disabled = false;
+    btn.dataset.confirming = "false";
+    btn.textContent = originalText;
+    return;
   }
 
   loadFlags();

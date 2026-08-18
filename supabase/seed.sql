@@ -5,7 +5,8 @@ values
   ('11111111-1111-1111-1111-111111111111', 'Sunny Paws Rescue', 'sunny-paws-rescue', 'A no-kill shelter serving the greater Austin area since 2010.', 'hello@sunnypaws.org', 'Austin', 'TX', '78701'),
   ('22222222-2222-2222-2222-222222222222', 'Second Chance Shelter', 'second-chance-shelter', 'Rescuing and rehoming dogs across the Pacific Northwest.', 'adopt@secondchance.org', 'Portland', 'OR', '97201'),
   ('33333333-3333-3333-3333-333333333333', 'Furry Friends Sanctuary', 'furry-friends-sanctuary', 'A small volunteer-run sanctuary focused on senior and special-needs dogs.', 'info@furryfriends.org', 'Denver', 'CO', '80202'),
-  ('44444444-4444-4444-4444-444444444444', 'City Animal Control', 'city-animal-control', 'Municipal animal control facility.', 'contact@cityanimalcontrol.gov', 'Austin', 'TX', '78702')
+  ('44444444-4444-4444-4444-444444444444', 'City Animal Control', 'city-animal-control', 'Municipal animal control facility.', 'contact@cityanimalcontrol.gov', 'Austin', 'TX', '78702'),
+  ('66666666-6666-6666-6666-666666666666', 'Riverside Rescue', 'riverside-rescue', 'A foster-based rescue network.', 'hello@riversiderescue.org', 'Riverside', 'CA', '92501')
 on conflict (id) do nothing;
 
 insert into dogs (id, shelter_id, name, breed, age_months, sex, size, description, status)
@@ -16,11 +17,16 @@ values
   ('a4444444-4444-4444-4444-444444444444', '22222222-2222-2222-2222-222222222222', 'Daisy', 'Beagle', 12, 'female', 'small', 'Curious and food-motivated, still working on leash manners.', 'pending'),
   ('a5555555-5555-5555-5555-555555555555', '33333333-3333-3333-3333-333333333333', 'Gus', 'Dachshund', 96, 'male', 'small', 'A sweet senior looking for a quiet retirement home.', 'available'),
   ('a6666666-6666-6666-6666-666666666666', '33333333-3333-3333-3333-333333333333', 'Willow', 'Shepherd Mix', 60, 'female', 'large', 'Recovering from a leg injury, needs a foster-to-adopt home.', 'hold'),
-  ('a7777777-7777-7777-7777-777777777777', '44444444-4444-4444-4444-444444444444', 'Max', 'Labrador Mix', 18, 'male', 'large', 'Friendly boy looking for his forever home.', 'available')
+  ('a7777777-7777-7777-7777-777777777777', '44444444-4444-4444-4444-444444444444', 'Max', 'Labrador Mix', 18, 'male', 'large', 'Friendly boy looking for his forever home.', 'available'),
+  ('a8888888-8888-8888-8888-888888888888', '66666666-6666-6666-6666-666666666666', 'Cooper', 'Pit Bull Mix', 30, 'male', 'medium', 'Demo dog: reuses Rocky''s photo, left unresolved as a pending-flag example.', 'available'),
+  ('a9999999-9999-9999-9999-999999999999', '22222222-2222-2222-2222-222222222222', 'Shadow', 'Shepherd Mix', 60, 'male', 'large', 'Demo dog: reuses Willow''s photo, its flag deliberately dismissed as a false positive.', 'available')
 on conflict (id) do nothing;
 
 -- One photo per dog. Max's photo is deliberately identical to Biscuit's --
 -- a stand-in for the "same photo, different name" pattern this is meant to catch.
+-- Cooper/Shadow reuse Rocky's and Willow's photos respectively, so the
+-- moderation dashboard always has a live pending example (Cooper, left
+-- unresolved) and a dismissed example (Shadow, see below) to look at.
 insert into dog_photos (id, dog_id, url)
 values
   ('b1111111-1111-1111-1111-111111111111', 'a1111111-1111-1111-1111-111111111111', 'https://placedog.net/500/280?id=10'),
@@ -29,5 +35,7 @@ values
   ('b4444444-4444-4444-4444-444444444444', 'a4444444-4444-4444-4444-444444444444', 'https://placedog.net/500/280?id=13'),
   ('b5555555-5555-5555-5555-555555555555', 'a5555555-5555-5555-5555-555555555555', 'https://placedog.net/500/280?id=14'),
   ('b6666666-6666-6666-6666-666666666666', 'a6666666-6666-6666-6666-666666666666', 'https://placedog.net/500/280?id=15'),
-  ('b7777777-7777-7777-7777-777777777777', 'a7777777-7777-7777-7777-777777777777', 'https://placedog.net/500/280?id=10')
+  ('b7777777-7777-7777-7777-777777777777', 'a7777777-7777-7777-7777-777777777777', 'https://placedog.net/500/280?id=10'),
+  ('b8888888-8888-8888-8888-888888888888', 'a8888888-8888-8888-8888-888888888888', 'https://placedog.net/500/280?id=12'),
+  ('b9999999-9999-9999-9999-999999999999', 'a9999999-9999-9999-9999-999999999999', 'https://placedog.net/500/280?id=15')
 on conflict (id) do nothing;
