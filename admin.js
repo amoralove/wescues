@@ -101,20 +101,29 @@ function renderFlags(flags) {
     const actionMessage = row.querySelector(".flag-action-message");
 
     row.querySelectorAll(".hide-btn").forEach((btn) => {
-      btn.addEventListener("click", () =>
+      const currentlyHidden = btn.dataset.hidden === "true";
+      const confirmText = currentlyHidden
+        ? `Are you sure? Click to confirm restoring ${btn.dataset.dogName}`
+        : `Are you sure? Click to confirm hiding ${btn.dataset.dogName}`;
+      attachConfirmHandler(btn, confirmText, (resetBtn) =>
         toggleHidden(
           flag.id,
           btn.dataset.dogId,
           btn.dataset.dogName,
           btn.dataset.otherName,
-          btn.dataset.hidden === "true",
+          currentlyHidden,
           actionMessage,
+          resetBtn,
         ),
       );
     });
 
     row.querySelectorAll(".delete-btn").forEach((btn) => {
-      attachDeleteHandler(btn, actionMessage);
+      attachConfirmHandler(
+        btn,
+        `Are you sure? Click to confirm deleting ${btn.dataset.dogName}`,
+        (resetBtn) => deleteDog(btn.dataset.dogId, btn.dataset.dogName, actionMessage, resetBtn),
+      );
     });
 
     const dismissBtn = row.querySelector(".dismiss-btn");
@@ -126,8 +135,10 @@ function renderFlags(flags) {
   }
 }
 
-async function toggleHidden(flagId, dogId, dogName, otherName, currentlyHidden, actionMessage) {
+async function toggleHidden(flagId, dogId, dogName, otherName, currentlyHidden, actionMessage, btn) {
   const nextHidden = !currentlyHidden;
+  btn.disabled = true;
+
   const { error: hideError } = await supabase.rpc("set_dog_hidden", {
     p_dog_id: dogId,
     p_hidden: nextHidden,
@@ -136,42 +147,48 @@ async function toggleHidden(flagId, dogId, dogName, otherName, currentlyHidden, 
 
   if (hideError) {
     actionMessage.textContent = `Couldn't update ${dogName}: ${hideError.message}`;
+    resetConfirmButton(btn);
     return;
   }
 
-  if (nextHidden) {
-    await supabase.from("flagged_listings").update({ status: "confirmed_duplicate" }).eq("id", flagId);
-  }
+  await supabase
+    .from("flagged_listings")
+    .update({ status: nextHidden ? "confirmed_duplicate" : "pending" })
+    .eq("id", flagId);
 
   loadFlags();
 }
 
 // Two-step in-page confirm instead of a native confirm() dialog -- not
 // every embedding context allows native dialogs, and this is easier to
-// style/test consistently anyway.
-function attachDeleteHandler(btn, actionMessage) {
-  const { dogId, dogName } = btn.dataset;
-  const originalText = btn.textContent;
+// style/test consistently anyway. First click arms it and shows
+// confirmText; second click runs onConfirm(btn).
+function attachConfirmHandler(btn, confirmText, onConfirm) {
+  btn.dataset.originalText = btn.textContent;
 
   btn.addEventListener("click", () => {
     if (btn.dataset.confirming !== "true") {
       btn.dataset.confirming = "true";
-      btn.textContent = `Are you sure? Click to confirm deleting ${dogName}`;
+      btn.textContent = confirmText;
       return;
     }
-    deleteDog(dogId, dogName, actionMessage, btn, originalText);
+    onConfirm(btn);
   });
 }
 
-async function deleteDog(dogId, dogName, actionMessage, btn, originalText) {
+function resetConfirmButton(btn) {
+  btn.disabled = false;
+  btn.dataset.confirming = "false";
+  btn.textContent = btn.dataset.originalText;
+}
+
+async function deleteDog(dogId, dogName, actionMessage, btn) {
   btn.disabled = true;
   const { error } = await supabase.from("dogs").delete().eq("id", dogId);
 
   if (error) {
     actionMessage.textContent = `Couldn't delete ${dogName}: ${error.message}`;
-    btn.disabled = false;
-    btn.dataset.confirming = "false";
-    btn.textContent = originalText;
+    resetConfirmButton(btn);
     return;
   }
 
