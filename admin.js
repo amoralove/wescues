@@ -68,12 +68,12 @@ function renderFlags(flags) {
     const row = document.createElement("div");
     row.className = "flag-row";
     row.innerHTML = `
-      <div class="flag-side">
+      <div class="flag-side ${flag.dog_hidden_at ? "is-hidden" : ""}">
         <img src="${flag.photo_url}" alt="${flag.dog_name}">
-        <p><strong>${flag.dog_name}</strong>${flag.dog_hidden_at ? ' <span class="hidden-tag">hidden</span>' : ""}</p>
+        <p><strong>${flag.dog_name}</strong>${flag.dog_hidden_at ? ' <span class="hidden-tag">HIDDEN from public site</span>' : ""}</p>
         <p class="dog-card-shelter">${flag.shelter_name}</p>
-        <button class="secondary-btn hide-btn" data-dog-id="${flag.dog_id}" data-dog-name="${flag.dog_name}" data-other-name="${flag.matched_dog_name}" data-hidden="${!!flag.dog_hidden_at}">
-          ${flag.dog_hidden_at ? `Unhide ${flag.dog_name}'s listing` : `Hide ${flag.dog_name}'s listing`}
+        <button class="${flag.dog_hidden_at ? "primary-btn" : "secondary-btn"} hide-btn" data-dog-id="${flag.dog_id}" data-dog-name="${flag.dog_name}" data-other-name="${flag.matched_dog_name}" data-hidden="${!!flag.dog_hidden_at}">
+          ${flag.dog_hidden_at ? `↺ Restore ${flag.dog_name}'s listing` : `Hide ${flag.dog_name}'s listing`}
         </button>
       </div>
       <div class="flag-meta">
@@ -82,12 +82,12 @@ function renderFlags(flags) {
         ${flag.status === "pending" ? `<button class="secondary-btn dismiss-btn">Dismiss (not a duplicate)</button>` : ""}
         <p class="flag-action-message"></p>
       </div>
-      <div class="flag-side">
+      <div class="flag-side ${flag.matched_dog_hidden_at ? "is-hidden" : ""}">
         <img src="${flag.matched_photo_url}" alt="${flag.matched_dog_name}">
-        <p><strong>${flag.matched_dog_name}</strong>${flag.matched_dog_hidden_at ? ' <span class="hidden-tag">hidden</span>' : ""}</p>
+        <p><strong>${flag.matched_dog_name}</strong>${flag.matched_dog_hidden_at ? ' <span class="hidden-tag">HIDDEN from public site</span>' : ""}</p>
         <p class="dog-card-shelter">${flag.matched_shelter_name}</p>
-        <button class="secondary-btn hide-btn" data-dog-id="${flag.matched_dog_id}" data-dog-name="${flag.matched_dog_name}" data-other-name="${flag.dog_name}" data-hidden="${!!flag.matched_dog_hidden_at}">
-          ${flag.matched_dog_hidden_at ? `Unhide ${flag.matched_dog_name}'s listing` : `Hide ${flag.matched_dog_name}'s listing`}
+        <button class="${flag.matched_dog_hidden_at ? "primary-btn" : "secondary-btn"} hide-btn" data-dog-id="${flag.matched_dog_id}" data-dog-name="${flag.matched_dog_name}" data-other-name="${flag.dog_name}" data-hidden="${!!flag.matched_dog_hidden_at}">
+          ${flag.matched_dog_hidden_at ? `↺ Restore ${flag.matched_dog_name}'s listing` : `Hide ${flag.matched_dog_name}'s listing`}
         </button>
       </div>
     `;

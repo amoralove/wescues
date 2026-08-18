@@ -299,6 +299,17 @@ body {
   text-align: center;
 }
 
+.flag-side {
+  border-radius: 8px;
+  padding: 0.5rem;
+  border: 2px solid transparent;
+}
+
+.flag-side.is-hidden {
+  background: #fbeee7;
+  border-color: #d97742;
+}
+
 .flag-side img {
   width: 100%;
   max-width: 220px;
@@ -306,6 +317,10 @@ body {
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 0.5rem;
+}
+
+.flag-side.is-hidden img {
+  opacity: 0.6;
 }
 
 .flag-side p {
