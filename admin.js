@@ -82,7 +82,9 @@ function renderFlags(flags) {
       <div class="flag-meta">
         <p>Hamming distance: ${flag.hamming_distance}</p>
         <p>Status: ${flag.status}</p>
-        ${flag.status === "pending" ? `<button class="secondary-btn dismiss-btn">Dismiss (not a duplicate)</button>` : ""}
+        <button class="secondary-btn dismiss-btn" data-dismissed="${flag.status === "dismissed"}">
+          ${flag.status === "dismissed" ? "↺ Undismiss (reopen as pending)" : "Dismiss (not a duplicate)"}
+        </button>
         <p class="flag-action-message"></p>
       </div>
       <div class="flag-side ${flag.matched_dog_hidden_at ? "is-hidden" : ""}">
@@ -116,9 +118,9 @@ function renderFlags(flags) {
     });
 
     const dismissBtn = row.querySelector(".dismiss-btn");
-    if (dismissBtn) {
-      dismissBtn.addEventListener("click", () => dismissFlag(flag.id, actionMessage));
-    }
+    dismissBtn.addEventListener("click", () =>
+      setDismissed(flag.id, dismissBtn.dataset.dismissed === "true", actionMessage),
+    );
 
     flagList.append(row);
   }
@@ -176,10 +178,11 @@ async function deleteDog(dogId, dogName, actionMessage, btn, originalText) {
   loadFlags();
 }
 
-async function dismissFlag(flagId, actionMessage) {
-  const { error } = await supabase.from("flagged_listings").update({ status: "dismissed" }).eq("id", flagId);
+async function setDismissed(flagId, currentlyDismissed, actionMessage) {
+  const nextStatus = currentlyDismissed ? "pending" : "dismissed";
+  const { error } = await supabase.from("flagged_listings").update({ status: nextStatus }).eq("id", flagId);
   if (error) {
-    actionMessage.textContent = `Couldn't dismiss: ${error.message}`;
+    actionMessage.textContent = `Couldn't update: ${error.message}`;
     return;
   }
   loadFlags();
