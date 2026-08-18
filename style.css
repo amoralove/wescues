@@ -327,3 +327,20 @@ body {
 .flag-meta button {
   margin-top: 0.75rem;
 }
+
+.hidden-tag {
+  display: inline-block;
+  background: #f0e4d8;
+  color: #a8592a;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.flag-action-message {
+  color: #b5432c;
+  font-size: 0.8rem;
+  min-height: 1.2em;
+}

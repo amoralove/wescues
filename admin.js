@@ -70,56 +70,76 @@ function renderFlags(flags) {
     row.innerHTML = `
       <div class="flag-side">
         <img src="${flag.photo_url}" alt="${flag.dog_name}">
-        <p><strong>${flag.dog_name}</strong></p>
+        <p><strong>${flag.dog_name}</strong>${flag.dog_hidden_at ? ' <span class="hidden-tag">hidden</span>' : ""}</p>
         <p class="dog-card-shelter">${flag.shelter_name}</p>
-        <button class="secondary-btn hide-btn" data-dog-id="${flag.dog_id}" data-dog-name="${flag.dog_name}" data-other-name="${flag.matched_dog_name}">Hide ${flag.dog_name}'s listing</button>
+        <button class="secondary-btn hide-btn" data-dog-id="${flag.dog_id}" data-dog-name="${flag.dog_name}" data-other-name="${flag.matched_dog_name}" data-hidden="${!!flag.dog_hidden_at}">
+          ${flag.dog_hidden_at ? `Unhide ${flag.dog_name}'s listing` : `Hide ${flag.dog_name}'s listing`}
+        </button>
       </div>
       <div class="flag-meta">
         <p>Hamming distance: ${flag.hamming_distance}</p>
         <p>Status: ${flag.status}</p>
         ${flag.status === "pending" ? `<button class="secondary-btn dismiss-btn">Dismiss (not a duplicate)</button>` : ""}
+        <p class="flag-action-message"></p>
       </div>
       <div class="flag-side">
         <img src="${flag.matched_photo_url}" alt="${flag.matched_dog_name}">
-        <p><strong>${flag.matched_dog_name}</strong></p>
+        <p><strong>${flag.matched_dog_name}</strong>${flag.matched_dog_hidden_at ? ' <span class="hidden-tag">hidden</span>' : ""}</p>
         <p class="dog-card-shelter">${flag.matched_shelter_name}</p>
-        <button class="secondary-btn hide-btn" data-dog-id="${flag.matched_dog_id}" data-dog-name="${flag.matched_dog_name}" data-other-name="${flag.dog_name}">Hide ${flag.matched_dog_name}'s listing</button>
+        <button class="secondary-btn hide-btn" data-dog-id="${flag.matched_dog_id}" data-dog-name="${flag.matched_dog_name}" data-other-name="${flag.dog_name}" data-hidden="${!!flag.matched_dog_hidden_at}">
+          ${flag.matched_dog_hidden_at ? `Unhide ${flag.matched_dog_name}'s listing` : `Hide ${flag.matched_dog_name}'s listing`}
+        </button>
       </div>
     `;
 
+    const actionMessage = row.querySelector(".flag-action-message");
+
     row.querySelectorAll(".hide-btn").forEach((btn) => {
-      btn.addEventListener("click", () => hideDog(flag.id, btn.dataset.dogId, btn.dataset.dogName, btn.dataset.otherName));
+      btn.addEventListener("click", () =>
+        toggleHidden(
+          flag.id,
+          btn.dataset.dogId,
+          btn.dataset.dogName,
+          btn.dataset.otherName,
+          btn.dataset.hidden === "true",
+          actionMessage,
+        ),
+      );
     });
 
     const dismissBtn = row.querySelector(".dismiss-btn");
     if (dismissBtn) {
-      dismissBtn.addEventListener("click", () => dismissFlag(flag.id));
+      dismissBtn.addEventListener("click", () => dismissFlag(flag.id, actionMessage));
     }
 
     flagList.append(row);
   }
 }
 
-async function hideDog(flagId, dogId, dogName, otherName) {
+async function toggleHidden(flagId, dogId, dogName, otherName, currentlyHidden, actionMessage) {
+  const nextHidden = !currentlyHidden;
   const { error: hideError } = await supabase.rpc("set_dog_hidden", {
     p_dog_id: dogId,
-    p_hidden: true,
-    p_reason: `Confirmed duplicate of ${otherName}`,
+    p_hidden: nextHidden,
+    p_reason: nextHidden ? `Confirmed duplicate of ${otherName}` : null,
   });
 
   if (hideError) {
-    alert(`Couldn't hide ${dogName}: ${hideError.message}`);
+    actionMessage.textContent = `Couldn't update ${dogName}: ${hideError.message}`;
     return;
   }
 
-  await supabase.from("flagged_listings").update({ status: "confirmed_duplicate" }).eq("id", flagId);
+  if (nextHidden) {
+    await supabase.from("flagged_listings").update({ status: "confirmed_duplicate" }).eq("id", flagId);
+  }
+
   loadFlags();
 }
 
-async function dismissFlag(flagId) {
+async function dismissFlag(flagId, actionMessage) {
   const { error } = await supabase.from("flagged_listings").update({ status: "dismissed" }).eq("id", flagId);
   if (error) {
-    alert(`Couldn't dismiss: ${error.message}`);
+    actionMessage.textContent = `Couldn't dismiss: ${error.message}`;
     return;
   }
   loadFlags();
