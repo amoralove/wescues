@@ -28,6 +28,14 @@ async function loadDogs() {
   render();
 }
 
+// Listings can change (hidden/unhidden, adopted, etc.) while this tab
+// sits open in the background, so refetch whenever it regains focus.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") loadDogs();
+});
+
+document.getElementById("refreshBtn").addEventListener("click", loadDogs);
+
 function render() {
   const breedQuery = breedFilter.value.trim().toLowerCase();
   const size = sizeFilter.value;
