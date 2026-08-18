@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wescues — Moderation</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+  }
+}
+</script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">🐾 Wescues — Moderation</div>
+    <a href="index.html" class="session-status" style="color: inherit; text-decoration: underline;">Back</a>
+  </header>
+
+  <main class="browse-main">
+    <p id="statusMessage"></p>
+
+    <div id="flagsSection" class="hidden">
+      <div class="filters">
+        <select id="statusFilter">
+          <option value="pending" selected>Pending</option>
+          <option value="confirmed_duplicate">Confirmed duplicates</option>
+          <option value="dismissed">Dismissed</option>
+          <option value="">All</option>
+        </select>
+      </div>
+
+      <p id="resultCount" class="result-count"></p>
+
+      <div id="flagList" class="flag-list"></div>
+    </div>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

@@ -68,8 +68,7 @@ body {
   gap: 0.9rem;
 }
 
-.auth-form.hidden,
-.card.hidden {
+.hidden {
   display: none;
 }
 
@@ -264,4 +263,56 @@ body {
 .modal-shelter {
   color: #6b6355;
   font-size: 0.9rem;
+}
+
+/* Moderation dashboard */
+
+.flag-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flag-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  align-items: start;
+}
+
+.flag-side {
+  text-align: center;
+}
+
+.flag-side img {
+  width: 100%;
+  max-width: 220px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.flag-side p {
+  margin: 0.2rem 0;
+}
+
+.flag-side .hide-btn {
+  margin-top: 0.5rem;
+}
+
+.flag-meta {
+  text-align: center;
+  min-width: 140px;
+  padding-top: 2rem;
+  font-size: 0.85rem;
+  color: #6b6355;
+}
+
+.flag-meta button {
+  margin-top: 0.75rem;
 }

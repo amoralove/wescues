@@ -55,6 +55,7 @@ async function renderSession(session) {
     sessionStatus.textContent = "Not signed in";
     authCard.classList.remove("hidden");
     profileCard.classList.add("hidden");
+    document.getElementById("adminLink")?.classList.add("hidden");
     return;
   }
 
@@ -85,6 +86,8 @@ async function renderSession(session) {
     dd.textContent = value;
     profileDetails.append(dt, dd);
   }
+
+  document.getElementById("adminLink")?.classList.toggle("hidden", profile?.role !== "platform_admin");
 }
 
 supabase.auth.onAuthStateChange((_event, session) => {
