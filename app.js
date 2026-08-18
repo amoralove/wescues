@@ -46,6 +46,18 @@ signupForm.addEventListener("submit", async (e) => {
     : "Check your email to confirm your account, then log in.";
 });
 
+document.getElementById("forgotPasswordBtn").addEventListener("click", async () => {
+  const email = loginForm.email.value.trim();
+  if (!email) {
+    authMessage.textContent = "Enter your email above first, then click “Forgot password?”";
+    return;
+  }
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${location.origin}/reset-password.html`,
+  });
+  authMessage.textContent = error ? error.message : "Check your email for a password reset link.";
+});
+
 document.getElementById("logoutBtn").addEventListener("click", async () => {
   await supabase.auth.signOut();
 });
