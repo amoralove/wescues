@@ -18,6 +18,8 @@
   <header class="topbar">
     <div class="brand">🐾 Wescues</div>
     <nav style="display: flex; align-items: center; gap: 1rem;">
+      <a href="shelter-dashboard.html" id="navShelterLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">My dogs</a>
+      <a href="account.html" id="navAccountLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">Account</a>
       <a href="admin.html" id="navAdminLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">Moderation</a>
       <a href="index.html" id="navLoginLink" class="session-status" style="color: inherit; text-decoration: underline;">Log in / Sign up</a>
       <span id="navEmail" class="session-status hidden"></span>
@@ -25,35 +27,50 @@
     </nav>
   </header>
 
-  <main class="browse-main">
-    <div class="filters">
-      <input type="text" id="breedFilter" placeholder="Search breed…">
-      <select id="sizeFilter">
-        <option value="">Any size</option>
-        <option value="small">Small</option>
-        <option value="medium">Medium</option>
-        <option value="large">Large</option>
-      </select>
+  <main class="browse-main" style="display: flex; gap: 1.5rem; max-width: 1200px;">
+    <aside style="width: 190px; flex: none;">
+      <div class="section-title">Filters</div>
+      <div class="panel" style="display: flex; flex-direction: column; gap: 1.1rem;">
+        <div>
+          <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.4rem;">Size</div>
+          <select id="sizeFilter" style="width: 100%; padding: 0.4rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
+            <option value="">Any size</option>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.4rem;">Age</div>
+          <select id="ageFilter" style="width: 100%; padding: 0.4rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
+            <option value="">Any age</option>
+            <option value="puppy">Puppy (&lt; 1yr)</option>
+            <option value="adult">Adult (1–7yr)</option>
+            <option value="senior">Senior (7yr+)</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.4rem;">Shelter</div>
+          <select id="shelterFilter" style="width: 100%; padding: 0.4rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
+            <option value="">All shelters</option>
+          </select>
+        </div>
+      </div>
+    </aside>
+
+    <div style="flex: 1;">
+      <div class="filters">
+        <input type="text" id="breedFilter" placeholder="Search breed, name…">
+      </div>
+
+      <p class="result-count">
+        <span id="resultCount"></span>
+        <button id="refreshBtn" class="link-btn" type="button">Refresh</button>
+      </p>
+
+      <div id="dogGrid" class="dog-grid"></div>
     </div>
-
-    <p class="result-count">
-      <span id="resultCount"></span>
-      <button id="refreshBtn" class="link-btn" type="button">Refresh</button>
-    </p>
-
-    <div id="dogGrid" class="dog-grid"></div>
   </main>
-
-  <div class="modal-overlay" id="dogModalOverlay">
-    <div class="modal">
-      <button class="close-btn" id="closeModalBtn">&times;</button>
-      <img id="modalPhoto" class="modal-photo" alt="">
-      <h2 id="modalName"></h2>
-      <p id="modalMeta" class="modal-meta"></p>
-      <p id="modalShelter" class="modal-shelter"></p>
-      <p id="modalDescription"></p>
-    </div>
-  </div>
 
   <script type="module" src="browse.js"></script>
 </body>

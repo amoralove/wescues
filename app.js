@@ -68,6 +68,8 @@ async function renderSession(session) {
     authCard.classList.remove("hidden");
     profileCard.classList.add("hidden");
     document.getElementById("adminLink")?.classList.add("hidden");
+    document.getElementById("shelterLink")?.classList.add("hidden");
+    document.getElementById("accountLink")?.classList.add("hidden");
     return;
   }
 
@@ -100,6 +102,8 @@ async function renderSession(session) {
   }
 
   document.getElementById("adminLink")?.classList.toggle("hidden", profile?.role !== "platform_admin");
+  document.getElementById("shelterLink")?.classList.toggle("hidden", profile?.role !== "shelter_staff");
+  document.getElementById("accountLink")?.classList.remove("hidden");
 }
 
 supabase.auth.onAuthStateChange((_event, session) => {

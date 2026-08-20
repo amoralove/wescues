@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wescues — Dog</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+  }
+}
+</script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">🐾 Wescues</div>
+    <nav style="display: flex; align-items: center; gap: 1rem;">
+      <a href="browse.html" class="session-status" style="color: inherit; text-decoration: underline;">Browse dogs</a>
+      <a href="shelter-dashboard.html" id="navShelterLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">My dogs</a>
+      <a href="account.html" id="navAccountLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">Account</a>
+      <a href="admin.html" id="navAdminLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">Moderation</a>
+      <a href="index.html" id="navLoginLink" class="session-status" style="color: inherit; text-decoration: underline;">Log in / Sign up</a>
+      <span id="navEmail" class="session-status hidden"></span>
+      <button id="navLogoutBtn" class="link-btn hidden" type="button" style="color: inherit;">Log out</button>
+    </nav>
+  </header>
+
+  <main class="page-main" id="detailMain">
+    <p id="statusMessage"></p>
+
+    <div id="detailContent" class="hidden" style="display: flex; gap: 2rem;">
+      <div style="width: 44%; flex: none; display: flex; flex-direction: column; gap: 0.6rem;">
+        <img id="mainPhoto" style="width: 100%; height: 420px; object-fit: cover; border-radius: 20px; background: #dcd3c4;" alt="">
+        <div id="thumbRow" style="display: flex; gap: 0.5rem;"></div>
+      </div>
+
+      <div style="flex: 1;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+          <div>
+            <h2 id="dogName" style="font-size: 1.8rem;"></h2>
+            <div id="dogMeta" style="font-size: 0.85rem; color: rgba(32,30,29,.6); margin-top: 0.2rem;"></div>
+          </div>
+          <button id="saveBtn" class="save-btn hidden" style="position: static; width: 40px; height: 40px; font-size: 1.3rem;" title="Save">♥</button>
+        </div>
+
+        <div id="dogTags" style="display: flex; gap: 0.4rem; margin-bottom: 1.1rem; flex-wrap: wrap;"></div>
+
+        <p id="dogDescription" style="font-size: 0.9rem; line-height: 1.6; color: rgba(32,30,29,.8); margin-bottom: 1.2rem;"></p>
+
+        <div class="panel" style="margin-bottom: 1.2rem;">
+          <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.5rem;">Listed by</div>
+          <div id="shelterInfo" style="font-size: 0.9rem; font-weight: 600;"></div>
+        </div>
+
+        <div id="applySection"></div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="dog-detail.js"></script>
+</body>
+</html>

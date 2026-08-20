@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wescues — My dogs</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+  }
+}
+</script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">🐾 Wescues <span style="font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin-left: 0.4rem;">for shelters</span></div>
+    <nav style="display: flex; align-items: center; gap: 1rem;">
+      <a href="browse.html" class="session-status" style="color: inherit; text-decoration: underline;">Browse dogs</a>
+      <a href="account.html" id="navAccountLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">Account</a>
+      <a href="index.html" id="navLoginLink" class="session-status" style="color: inherit; text-decoration: underline;">Log in / Sign up</a>
+      <span id="navEmail" class="session-status hidden"></span>
+      <button id="navLogoutBtn" class="link-btn hidden" type="button" style="color: inherit;">Log out</button>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <p id="statusMessage"></p>
+
+    <div id="dashboardContent" class="hidden">
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0;">
+        <div class="stat-row" style="flex: 1; margin-bottom: 0;">
+          <div class="panel stat-tile"><div class="stat-num" id="statActive">–</div><div class="stat-label">active listings</div></div>
+          <div class="panel stat-tile"><div class="stat-num" id="statApplications">–</div><div class="stat-label">applications this week</div></div>
+          <div class="panel stat-tile alert"><div class="stat-num" id="statCheckins">–</div><div class="stat-label">check-ins awaiting reply</div></div>
+        </div>
+        <button id="addDogBtn" class="primary-btn" style="margin-top: 0;">+ Add a dog</button>
+      </div>
+
+      <table class="data-table" style="margin-top: 1.5rem;">
+        <thead>
+          <tr>
+            <th>Dog</th><th>Breed</th><th>Age</th><th>Status</th><th>Last confirmed</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="dogsTableBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Add/edit dog modal -->
+  <div class="modal-overlay" id="dogFormOverlay">
+    <div class="modal">
+      <button class="close-btn" id="closeDogFormBtn">&times;</button>
+      <h3 id="dogFormTitle" style="margin-bottom: 1rem;">Add a dog</h3>
+      <form id="dogForm" style="display: flex; flex-direction: column; gap: 0.6rem;">
+        <input type="hidden" id="dogFormId">
+        <label style="font-size: 0.85rem;">Name<br>
+          <input type="text" id="dogFormName" required style="width: 100%; padding: 0.5rem 0.9rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
+        </label>
+        <label style="font-size: 0.85rem;">Breed<br>
+          <input type="text" id="dogFormBreed" style="width: 100%; padding: 0.5rem 0.9rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
+        </label>
+        <div style="display: flex; gap: 0.6rem;">
+          <label style="font-size: 0.85rem; flex: 1;">Age (months)<br>
+            <input type="number" id="dogFormAge" min="0" style="width: 100%; padding: 0.5rem 0.9rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
+          </label>
+          <label style="font-size: 0.85rem; flex: 1;">Sex<br>
+            <select id="dogFormSex" style="width: 100%; padding: 0.5rem 0.9rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
+              <option value="unknown">Unknown</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+        </div>
+        <div style="display: flex; gap: 0.6rem;">
+          <label style="font-size: 0.85rem; flex: 1;">Size<br>
+            <select id="dogFormSize" style="width: 100%; padding: 0.5rem 0.9rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
+              <option value="">—</option>
+              <option value="small">Small</option>
+              <option value="medium">Medium</option>
+              <option value="large">Large</option>
+            </select>
+          </label>
+          <label style="font-size: 0.85rem; flex: 1;">Status<br>
+            <select id="dogFormStatus" style="width: 100%; padding: 0.5rem 0.9rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
+              <option value="available">Available</option>
+              <option value="pending">Pending adoption</option>
+              <option value="adopted">Adopted</option>
+              <option value="hold">Hold</option>
+            </select>
+          </label>
+        </div>
+        <label style="font-size: 0.85rem;">Description<br>
+          <textarea id="dogFormDescription" style="width: 100%; padding: 0.5rem 0.9rem; border-radius: 18px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit; resize: none; min-height: 70px;"></textarea>
+        </label>
+        <button type="submit" class="primary-btn" style="width: 100%;">Save</button>
+        <p id="dogFormMessage" style="font-size: 0.8rem; color: #b5432c; min-height: 1.2em; margin: 0;"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Check-in confirm modal -->
+  <div class="modal-overlay" id="checkinOverlay">
+    <div class="modal" style="max-width: 380px;">
+      <button class="close-btn" id="closeCheckinBtn">&times;</button>
+      <h3 id="checkinTitle" style="margin-bottom: 0.6rem;"></h3>
+      <p style="font-size: 0.85rem; color: rgba(32,30,29,.75); margin-bottom: 1rem;">Quick check so adopters see accurate info. If you don't confirm, this listing will eventually be hidden — not deleted, you can bring it back anytime.</p>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <button id="checkinStillHere" class="primary-btn">Still here</button>
+        <button id="checkinAdopted" class="secondary-btn" style="margin-top: 0;">Adopted!</button>
+        <button id="checkinLater" class="link-btn" style="align-self: center; margin-top: 0.3rem;">Remind me later</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="shelter-dashboard.js"></script>
+</body>
+</html>

@@ -38,7 +38,13 @@
         </select>
       </div>
 
-      <p id="resultCount" class="result-count"></p>
+      <div class="queue-header">
+        <span>Queue: <strong id="queueCount">0 pending</strong></span>
+        <div class="queue-nav">
+          <button id="prevFlagBtn" class="secondary-btn" style="padding: 0.4rem 0.9rem;">← Prev</button>
+          <button id="nextFlagBtn" class="secondary-btn" style="padding: 0.4rem 0.9rem;">Next →</button>
+        </div>
+      </div>
 
       <div id="flagList" class="flag-list"></div>
     </div>
