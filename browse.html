@@ -27,38 +27,31 @@
     </nav>
   </header>
 
-  <main class="browse-main" style="display: flex; gap: 1.5rem; max-width: 1200px;">
-    <aside style="width: 190px; flex: none;">
-      <div class="section-title">Filters</div>
-      <div class="panel" style="display: flex; flex-direction: column; gap: 1.1rem;">
-        <div>
-          <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.4rem;">Size</div>
-          <select id="sizeFilter" style="width: 100%; padding: 0.4rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
-            <option value="">Any size</option>
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
-          </select>
-        </div>
-        <div>
-          <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.4rem;">Age</div>
-          <select id="ageFilter" style="width: 100%; padding: 0.4rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
-            <option value="">Any age</option>
-            <option value="puppy">Puppy (&lt; 1yr)</option>
-            <option value="adult">Adult (1–7yr)</option>
-            <option value="senior">Senior (7yr+)</option>
-          </select>
-        </div>
-        <div>
-          <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.4rem;">Shelter</div>
-          <select id="shelterFilter" style="width: 100%; padding: 0.4rem; border-radius: 999px; border: 1px solid rgba(32,30,29,.18); background: #f9f4ed; font-family: inherit;">
-            <option value="">All shelters</option>
-          </select>
-        </div>
-      </div>
+  <main class="browse-main" style="display: flex; gap: 0; max-width: 1300px; padding: 0;">
+    <aside class="filter-sidebar">
+      <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.5rem;">Size</div>
+      <select id="sizeFilter">
+        <option value="">Any size</option>
+        <option value="small">Small</option>
+        <option value="medium">Medium</option>
+        <option value="large">Large</option>
+      </select>
+
+      <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin: 1.3rem 0 0.5rem;">Age</div>
+      <select id="ageFilter">
+        <option value="">Any age</option>
+        <option value="puppy">Puppy (&lt; 1yr)</option>
+        <option value="adult">Adult (1–7yr)</option>
+        <option value="senior">Senior (7yr+)</option>
+      </select>
+
+      <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin: 1.3rem 0 0.5rem;">Shelter</div>
+      <select id="shelterFilter">
+        <option value="">All shelters</option>
+      </select>
     </aside>
 
-    <div style="flex: 1;">
+    <div style="flex: 1; padding: 1.5rem 2rem;">
       <div class="filters">
         <input type="text" id="breedFilter" placeholder="Search breed, name…">
       </div>
