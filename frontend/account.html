@@ -15,32 +15,35 @@
 </head>
 <body>
 
-  <header class="topbar">
-    <div class="brand">🐾 Wescues</div>
-    <nav style="display: flex; align-items: center; gap: 1rem;">
-      <a href="browse.html" class="session-status" style="color: inherit; text-decoration: underline;">Browse dogs</a>
-      <a href="shelter-dashboard.html" id="navShelterLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">My dogs</a>
-      <a href="admin.html" id="navAdminLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">Moderation</a>
-      <a href="index.html" id="navLoginLink" class="session-status" style="color: inherit; text-decoration: underline;">Log in / Sign up</a>
-      <span id="navEmail" class="session-status hidden"></span>
-      <button id="navLogoutBtn" class="link-btn hidden" type="button" style="color: inherit;">Log out</button>
-    </nav>
-  </header>
+  <div class="app-shell">
+    <header class="navbar">
+      <div class="brand">Wescues</div>
+      <nav class="navbar-links">
+        <a href="browse.html">Browse</a>
+        <a href="shelter-dashboard.html" id="navShelterLink" class="hidden">My dogs</a>
+        <a href="admin.html" id="navAdminLink" class="hidden">Moderation</a>
+        <a href="account.html" id="navAccountLink" class="hidden active">Account</a>
+        <a href="index.html" id="navLoginLink">Log in / Sign up</a>
+        <span id="navEmail" class="hidden"></span>
+        <button id="navLogoutBtn" class="link-btn hidden" type="button" style="color: inherit;">Log out</button>
+      </nav>
+    </header>
 
-  <main class="page-main">
-    <p id="statusMessage"></p>
+    <main class="page-main">
+      <p id="statusMessage"></p>
 
-    <div id="accountContent" class="hidden">
-      <h3 id="greeting" style="font-size: 1.5rem; margin-bottom: 0.2rem;"></h3>
-      <div id="summaryLine" style="font-size: 0.85rem; color: rgba(32,30,29,.6); margin-bottom: 1.5rem;"></div>
+      <div id="accountContent" class="hidden">
+        <h3 id="greeting" style="font-size: 1.5rem; margin-bottom: 0.2rem;"></h3>
+        <div id="summaryLine" style="font-size: 0.85rem; color: rgba(32,30,29,.6); margin-bottom: 1.5rem;"></div>
 
-      <div class="section-title">Your applications</div>
-      <div id="applicationsList" style="display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2rem;"></div>
+        <div class="section-title">Your applications</div>
+        <div id="applicationsList" style="display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2rem;"></div>
 
-      <div class="section-title">Saved dogs</div>
-      <div id="savedGrid" class="dog-grid"></div>
-    </div>
-  </main>
+        <div class="section-title">Saved dogs</div>
+        <div id="savedGrid" class="dog-grid"></div>
+      </div>
+    </main>
+  </div>
 
   <script type="module" src="account.js"></script>
 </body>

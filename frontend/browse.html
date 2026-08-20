@@ -15,55 +15,58 @@
 </head>
 <body>
 
-  <header class="topbar">
-    <div class="brand">🐾 Wescues</div>
-    <nav style="display: flex; align-items: center; gap: 1rem;">
-      <a href="shelter-dashboard.html" id="navShelterLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">My dogs</a>
-      <a href="account.html" id="navAccountLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">Account</a>
-      <a href="admin.html" id="navAdminLink" class="session-status hidden" style="color: inherit; text-decoration: underline;">Moderation</a>
-      <a href="index.html" id="navLoginLink" class="session-status" style="color: inherit; text-decoration: underline;">Log in / Sign up</a>
-      <span id="navEmail" class="session-status hidden"></span>
-      <button id="navLogoutBtn" class="link-btn hidden" type="button" style="color: inherit;">Log out</button>
-    </nav>
-  </header>
+  <div class="app-shell">
+    <header class="navbar">
+      <div class="brand">Wescues</div>
+      <nav class="navbar-links">
+        <a href="browse.html" class="active">Browse</a>
+        <a href="shelter-dashboard.html" id="navShelterLink" class="hidden">My dogs</a>
+        <a href="account.html" id="navAccountLink" class="hidden">Account</a>
+        <a href="admin.html" id="navAdminLink" class="hidden">Moderation</a>
+        <a href="index.html" id="navLoginLink">Log in / Sign up</a>
+        <span id="navEmail" class="hidden"></span>
+        <button id="navLogoutBtn" class="link-btn hidden" type="button" style="color: inherit;">Log out</button>
+      </nav>
+    </header>
 
-  <main class="browse-main" style="display: flex; gap: 0; max-width: 1300px; padding: 0;">
-    <aside class="filter-sidebar">
-      <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.5rem;">Size</div>
-      <select id="sizeFilter">
-        <option value="">Any size</option>
-        <option value="small">Small</option>
-        <option value="medium">Medium</option>
-        <option value="large">Large</option>
-      </select>
+    <main style="display: flex; gap: 0;">
+      <aside class="filter-sidebar">
+        <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.5rem;">Size</div>
+        <select id="sizeFilter">
+          <option value="">Any size</option>
+          <option value="small">Small</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+        </select>
 
-      <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin: 1.3rem 0 0.5rem;">Age</div>
-      <select id="ageFilter">
-        <option value="">Any age</option>
-        <option value="puppy">Puppy (&lt; 1yr)</option>
-        <option value="adult">Adult (1–7yr)</option>
-        <option value="senior">Senior (7yr+)</option>
-      </select>
+        <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin: 1.3rem 0 0.5rem;">Age</div>
+        <select id="ageFilter">
+          <option value="">Any age</option>
+          <option value="puppy">Puppy (&lt; 1yr)</option>
+          <option value="adult">Adult (1–7yr)</option>
+          <option value="senior">Senior (7yr+)</option>
+        </select>
 
-      <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin: 1.3rem 0 0.5rem;">Shelter</div>
-      <select id="shelterFilter">
-        <option value="">All shelters</option>
-      </select>
-    </aside>
+        <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin: 1.3rem 0 0.5rem;">Shelter</div>
+        <select id="shelterFilter">
+          <option value="">All shelters</option>
+        </select>
+      </aside>
 
-    <div style="flex: 1; padding: 1.5rem 2rem;">
-      <div class="filters">
-        <input type="text" id="breedFilter" placeholder="Search breed, name…">
+      <div style="flex: 1; padding: 1.5rem 2rem;">
+        <div class="filters">
+          <input type="text" id="breedFilter" placeholder="Search breed, name…">
+        </div>
+
+        <p class="result-count">
+          <span id="resultCount"></span>
+          <button id="refreshBtn" class="link-btn" type="button">Refresh</button>
+        </p>
+
+        <div id="dogGrid" class="dog-grid"></div>
       </div>
-
-      <p class="result-count">
-        <span id="resultCount"></span>
-        <button id="refreshBtn" class="link-btn" type="button">Refresh</button>
-      </p>
-
-      <div id="dogGrid" class="dog-grid"></div>
-    </div>
-  </main>
+    </main>
+  </div>
 
   <script type="module" src="browse.js"></script>
 </body>
