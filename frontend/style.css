@@ -28,15 +28,15 @@ h1, h2, h3, h4 {
 .navbar {
   display: flex;
   align-items: center;
-  gap: 28px;
-  padding: 16px 32px;
+  gap: 36px;
+  padding: 28px 48px;
   background: #f5ead8;
   border-bottom: 1px solid rgba(32, 30, 29, 0.1);
 }
 
 .navbar .brand {
   font-family: 'Caprasimo', system-ui, sans-serif;
-  font-size: 19px;
+  font-size: 28px;
   color: #8c491a;
 }
 
@@ -44,8 +44,8 @@ h1, h2, h3, h4 {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 22px;
-  font-size: 13px;
+  gap: 28px;
+  font-size: 16px;
   font-weight: 600;
 }
 
