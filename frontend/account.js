@@ -9,6 +9,9 @@ initNav(supabase);
 
 const statusMessage = document.getElementById("statusMessage");
 const accountContent = document.getElementById("accountContent");
+const profileNameForm = document.getElementById("profileNameForm");
+const fullNameInput = document.getElementById("fullNameInput");
+const profileNameMessage = document.getElementById("profileNameMessage");
 
 function ageLabel(months) {
   if (!months) return "";
@@ -38,8 +41,30 @@ async function init() {
     .single();
 
   document.getElementById("greeting").textContent = `Hi, ${profile?.full_name || session.user.email}`;
+  fullNameInput.value = profile?.full_name || "";
   statusMessage.textContent = "";
   accountContent.classList.remove("hidden");
+
+  profileNameForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const trimmedName = fullNameInput.value.trim();
+    if (!trimmedName) {
+      profileNameMessage.textContent = "Enter a display name.";
+      return;
+    }
+    const { error } = await supabase
+      .from("profiles")
+      .update({ full_name: trimmedName })
+      .eq("id", session.user.id);
+    if (error) {
+      profileNameMessage.textContent = error.message;
+      return;
+    }
+    profileNameMessage.textContent = "Saved.";
+    document.getElementById("greeting").textContent = `Hi, ${trimmedName}`;
+    const navEmail = document.getElementById("navEmail");
+    if (navEmail) navEmail.textContent = trimmedName;
+  });
 
   await Promise.all([loadApplications(session.user.id), loadSaved(session.user.id)]);
 }
