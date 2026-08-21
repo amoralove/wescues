@@ -4,7 +4,6 @@
 
 body {
   margin: 0;
-  padding: 24px;
   min-height: 100vh;
   font-family: 'Figtree', system-ui, sans-serif;
   background: #e4d6bc;
@@ -18,17 +17,12 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 
-/* App shell: the rounded, shadowed card every "interior" page (browse,
-   dog detail, shelter dashboard, moderation, account) sits inside, on
-   the tan body background -- taken directly from the mockup's .win. */
+/* App shell: full-width wrapper for every "interior" page (browse, dog
+   detail, shelter dashboard, moderation, account) -- no card/box, just
+   groups the navbar + content. */
 
 .app-shell {
-  max-width: 1300px;
-  margin: 0 auto;
-  background: #f5ead8;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 12px 32px rgba(46, 43, 37, 0.22);
+  min-height: 100vh;
 }
 
 .navbar {
@@ -36,6 +30,7 @@ h1, h2, h3, h4 {
   align-items: center;
   gap: 28px;
   padding: 16px 32px;
+  background: #f5ead8;
   border-bottom: 1px solid rgba(32, 30, 29, 0.1);
 }
 
