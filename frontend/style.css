@@ -280,14 +280,67 @@ h1, h2, h3, h4 {
   border-right: 1px solid rgba(32, 30, 29, 0.1);
 }
 
-.filter-sidebar select {
-  width: 100%;
+.filter-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(32, 30, 29, 0.5);
+  margin: 1.3rem 0 0.5rem;
+}
+
+.filter-label:first-child {
+  margin-top: 0;
+}
+
+.filter-zip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.5rem 0.9rem;
   border-radius: 999px;
   border: 1px solid rgba(32, 30, 29, 0.18);
   background: #f9f4ed;
+}
+
+.filter-zip input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  padding: 0;
   font-family: inherit;
   font-size: 0.9rem;
+  outline: none;
+}
+
+.filter-static {
+  font-size: 0.95rem;
+  color: #201e1d;
+}
+
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill-toggle {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(32, 30, 29, 0.18);
+  background: #f9f4ed;
+  color: #201e1d;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pill-toggle.active {
+  background: #fff2eb;
+  border-color: #f0dcce;
+  color: #c67139;
 }
 
 .filters {

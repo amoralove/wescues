@@ -22,10 +22,8 @@
         <a href="browse.html">Browse</a>
         <a href="shelter-dashboard.html" id="navShelterLink" class="hidden">My dogs</a>
         <a href="admin.html" id="navAdminLink" class="hidden">Moderation</a>
-        <a href="account.html" id="navAccountLink" class="hidden active">Account</a>
         <a href="index.html" id="navLoginLink">Log in / Sign up</a>
-        <span id="navEmail" class="hidden"></span>
-        <button id="navLogoutBtn" class="link-btn hidden" type="button" style="color: inherit;">Log out</button>
+        <a href="account.html" id="navEmail" class="hidden active"></a>
       </nav>
     </header>
 
@@ -33,7 +31,10 @@
       <p id="statusMessage"></p>
 
       <div id="accountContent" class="hidden">
-        <h3 id="greeting" style="font-size: 1.5rem; margin-bottom: 0.2rem;"></h3>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.2rem;">
+          <h3 id="greeting" style="font-size: 1.5rem;"></h3>
+          <button id="logoutBtn" class="secondary-btn" type="button">Log out</button>
+        </div>
         <div id="summaryLine" style="font-size: 0.85rem; color: rgba(32,30,29,.6); margin-bottom: 1.5rem;"></div>
 
         <div class="section-title">Profile</div>

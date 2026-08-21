@@ -21,36 +21,39 @@
       <nav class="navbar-links">
         <a href="browse.html" class="active">Browse</a>
         <a href="shelter-dashboard.html" id="navShelterLink" class="hidden">My dogs</a>
-        <a href="account.html" id="navAccountLink" class="hidden">Account</a>
         <a href="admin.html" id="navAdminLink" class="hidden">Moderation</a>
         <a href="index.html" id="navLoginLink">Log in / Sign up</a>
-        <span id="navEmail" class="hidden"></span>
-        <button id="navLogoutBtn" class="link-btn hidden" type="button" style="color: inherit;">Log out</button>
+        <a href="account.html" id="navEmail" class="hidden"></a>
       </nav>
     </header>
 
     <main style="display: flex; gap: 0;">
       <aside class="filter-sidebar">
-        <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin-bottom: 0.5rem;">Size</div>
-        <select id="sizeFilter">
-          <option value="">Any size</option>
-          <option value="small">Small</option>
-          <option value="medium">Medium</option>
-          <option value="large">Large</option>
-        </select>
+        <div class="filter-label">Zip code</div>
+        <div class="filter-zip">
+          <span aria-hidden="true">📍</span>
+          <input type="text" id="zipInput" inputmode="numeric" placeholder="Zip code">
+        </div>
 
-        <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin: 1.3rem 0 0.5rem;">Age</div>
-        <select id="ageFilter">
-          <option value="">Any age</option>
-          <option value="puppy">Puppy (&lt; 1yr)</option>
-          <option value="adult">Adult (1–7yr)</option>
-          <option value="senior">Senior (7yr+)</option>
-        </select>
+        <div class="filter-label">Distance</div>
+        <div class="filter-static">Within 25 miles</div>
 
-        <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(32,30,29,.5); margin: 1.3rem 0 0.5rem;">Shelter</div>
-        <select id="shelterFilter">
-          <option value="">All shelters</option>
-        </select>
+        <div class="filter-label">Size</div>
+        <div class="pill-group" id="sizeGroup">
+          <button type="button" class="pill-toggle" data-value="small">Small</button>
+          <button type="button" class="pill-toggle" data-value="medium">Medium</button>
+          <button type="button" class="pill-toggle" data-value="large">Large</button>
+        </div>
+
+        <div class="filter-label">Age</div>
+        <div class="pill-group" id="ageGroup">
+          <button type="button" class="pill-toggle" data-value="puppy">Puppy</button>
+          <button type="button" class="pill-toggle" data-value="adult">Adult</button>
+          <button type="button" class="pill-toggle" data-value="senior">Senior</button>
+        </div>
+
+        <div class="filter-label">Shelter</div>
+        <div class="filter-static" id="shelterCount"></div>
       </aside>
 
       <div style="flex: 1; padding: 1.5rem 2rem;">
@@ -60,7 +63,6 @@
 
         <p class="result-count">
           <span id="resultCount"></span>
-          <button id="refreshBtn" class="link-btn" type="button">Refresh</button>
         </p>
 
         <div id="dogGrid" class="dog-grid"></div>

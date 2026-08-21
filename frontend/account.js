@@ -7,6 +7,8 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 initNav(supabase);
 
+document.getElementById("logoutBtn").addEventListener("click", () => supabase.auth.signOut());
+
 const statusMessage = document.getElementById("statusMessage");
 const accountContent = document.getElementById("accountContent");
 const profileNameForm = document.getElementById("profileNameForm");

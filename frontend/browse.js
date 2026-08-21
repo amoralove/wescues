@@ -10,13 +10,36 @@ initNav(supabase);
 const dogGrid = document.getElementById("dogGrid");
 const resultCount = document.getElementById("resultCount");
 const breedFilter = document.getElementById("breedFilter");
-const sizeFilter = document.getElementById("sizeFilter");
-const ageFilter = document.getElementById("ageFilter");
-const shelterFilter = document.getElementById("shelterFilter");
+const sizeGroup = document.getElementById("sizeGroup");
+const ageGroup = document.getElementById("ageGroup");
+const shelterCount = document.getElementById("shelterCount");
 
 let allDogs = [];
 let savedDogIds = new Set();
 let currentUserId = null;
+let selectedSize = "";
+let selectedAge = "";
+
+function initPillGroup(group, onChange) {
+  group.addEventListener("click", (e) => {
+    const btn = e.target.closest(".pill-toggle");
+    if (!btn) return;
+    const wasActive = btn.classList.contains("active");
+    group.querySelectorAll(".pill-toggle").forEach((b) => b.classList.remove("active"));
+    if (!wasActive) btn.classList.add("active");
+    onChange(wasActive ? "" : btn.dataset.value);
+  });
+}
+
+initPillGroup(sizeGroup, (value) => {
+  selectedSize = value;
+  render();
+});
+
+initPillGroup(ageGroup, (value) => {
+  selectedAge = value;
+  render();
+});
 
 async function loadDogs() {
   const { data, error } = await supabase
@@ -32,23 +55,13 @@ async function loadDogs() {
   }
 
   allDogs = data;
-  populateShelterFilter();
+  updateShelterCount();
   render();
 }
 
-function populateShelterFilter() {
-  const current = shelterFilter.value;
-  const shelters = new Map();
-  for (const dog of allDogs) shelters.set(dog.shelter_id, dog.shelters.name);
-
-  shelterFilter.innerHTML = '<option value="">All shelters</option>';
-  for (const [id, name] of [...shelters.entries()].sort((a, b) => a[1].localeCompare(b[1]))) {
-    const opt = document.createElement("option");
-    opt.value = id;
-    opt.textContent = name;
-    shelterFilter.append(opt);
-  }
-  shelterFilter.value = current;
+function updateShelterCount() {
+  const shelterIds = new Set(allDogs.map((dog) => dog.shelter_id));
+  shelterCount.textContent = `${shelterIds.size} participating shelter${shelterIds.size === 1 ? "" : "s"}`;
 }
 
 async function loadSaved() {
@@ -73,8 +86,6 @@ async function refreshAll() {
   await loadDogs();
 }
 
-document.getElementById("refreshBtn").addEventListener("click", refreshAll);
-
 function ageBucket(months) {
   if (!months) return null;
   if (months < 12) return "puppy";
@@ -84,15 +95,11 @@ function ageBucket(months) {
 
 function render() {
   const breedQuery = breedFilter.value.trim().toLowerCase();
-  const size = sizeFilter.value;
-  const age = ageFilter.value;
-  const shelterId = shelterFilter.value;
 
   const filtered = allDogs.filter((dog) => {
     if (breedQuery && !dog.breed?.toLowerCase().includes(breedQuery) && !dog.name.toLowerCase().includes(breedQuery)) return false;
-    if (size && dog.size !== size) return false;
-    if (age && ageBucket(dog.age_months) !== age) return false;
-    if (shelterId && dog.shelter_id !== shelterId) return false;
+    if (selectedSize && dog.size !== selectedSize) return false;
+    if (selectedAge && ageBucket(dog.age_months) !== selectedAge) return false;
     return true;
   });
 
@@ -147,8 +154,5 @@ function ageLabel(months) {
 }
 
 breedFilter.addEventListener("input", render);
-sizeFilter.addEventListener("change", render);
-ageFilter.addEventListener("change", render);
-shelterFilter.addEventListener("change", render);
 
 refreshAll();
