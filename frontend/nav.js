@@ -1,7 +1,8 @@
-// Shared top-right account display: email + log out when signed in,
-// "Log in / Sign up" when not, plus role-aware links. Pages include the
-// matching markup (#navLoginLink, #navEmail, #navLogoutBtn, and any of
-// #navAdminLink / #navShelterLink / #navAccountLink) and call initNav(supabase).
+// Shared top-right account display: profile name (falling back to email) +
+// log out when signed in, "Log in / Sign up" when not, plus role-aware
+// links. Pages include the matching markup (#navLoginLink, #navEmail,
+// #navLogoutBtn, and any of #navAdminLink / #navShelterLink /
+// #navAccountLink) and call initNav(supabase).
 
 export function initNav(supabase) {
   const loginLink = document.getElementById("navLoginLink");
@@ -23,22 +24,21 @@ export function initNav(supabase) {
     }
 
     loginLink?.classList.add("hidden");
-    if (emailEl) {
-      emailEl.textContent = session.user.email;
-      emailEl.classList.remove("hidden");
-    }
     logoutBtn?.classList.remove("hidden");
     accountLink?.classList.remove("hidden");
 
-    if (adminLink || shelterLink) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", session.user.id)
-        .single();
-      adminLink?.classList.toggle("hidden", profile?.role !== "platform_admin");
-      shelterLink?.classList.toggle("hidden", profile?.role !== "shelter_staff");
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name, role")
+      .eq("id", session.user.id)
+      .single();
+
+    if (emailEl) {
+      emailEl.textContent = profile?.full_name || session.user.email;
+      emailEl.classList.remove("hidden");
     }
+    adminLink?.classList.toggle("hidden", profile?.role !== "platform_admin");
+    shelterLink?.classList.toggle("hidden", profile?.role !== "shelter_staff");
   }
 
   logoutBtn?.addEventListener("click", () => supabase.auth.signOut());

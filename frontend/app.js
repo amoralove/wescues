@@ -36,10 +36,15 @@ loginForm.addEventListener("submit", async (e) => {
 signupForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const { email, password, full_name } = Object.fromEntries(new FormData(signupForm));
+  const trimmedName = full_name.trim();
+  if (!trimmedName) {
+    authMessage.textContent = "Enter your name so we can show it on your account.";
+    return;
+  }
   const { error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { full_name } },
+    options: { data: { full_name: trimmedName } },
   });
   authMessage.textContent = error
     ? error.message
@@ -73,7 +78,6 @@ async function renderSession(session) {
     return;
   }
 
-  sessionStatus.textContent = session.user.email;
   authCard.classList.add("hidden");
   profileCard.classList.remove("hidden");
 
@@ -82,6 +86,8 @@ async function renderSession(session) {
     .select("full_name, role, shelter_id")
     .eq("id", session.user.id)
     .single();
+
+  sessionStatus.textContent = profile?.full_name || session.user.email;
 
   profileDetails.innerHTML = "";
   const rows = error
