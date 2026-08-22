@@ -138,7 +138,11 @@ async function loadSaved(userId) {
       const unavailable = dog.hidden_at || dog.status !== "available";
       return `
       <a href="dog-detail?id=${dog.id}" class="dog-card" style="text-decoration: none; display: block;">
-        ${photoUrl ? `<img src="${photoUrl}" alt="${dog.name}" loading="lazy">` : `<div class="dog-card-noimg">🐶</div>`}
+        <div class="dog-photo-wrap">
+          <div class="dog-avatar-ring ${unavailable ? "" : "available"}">
+            ${photoUrl ? `<img src="${photoUrl}" alt="${dog.name}" loading="lazy">` : `<div class="dog-card-noimg">🐶</div>`}
+          </div>
+        </div>
         <div class="dog-card-body">
           <h3>${dog.name}</h3>
           <p>${[dog.breed, ageLabel(dog.age_months)].filter(Boolean).join(" · ")}</p>

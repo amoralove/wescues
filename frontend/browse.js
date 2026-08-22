@@ -113,7 +113,11 @@ function render() {
     card.className = "dog-card";
     card.innerHTML = `
       ${currentUserId ? `<button class="save-btn ${isSaved ? "saved" : ""}" data-dog-id="${dog.id}" title="${isSaved ? "Unsave" : "Save"}" aria-label="${isSaved ? "Unsave" : "Save"}">♥</button>` : ""}
-      ${photoUrl ? `<img src="${photoUrl}" alt="${dog.name}" loading="lazy">` : `<div class="dog-card-noimg">🐶</div>`}
+      <div class="dog-photo-wrap">
+        <div class="dog-avatar-ring available">
+          ${photoUrl ? `<img src="${photoUrl}" alt="${dog.name}" loading="lazy">` : `<div class="dog-card-noimg">🐶</div>`}
+        </div>
+      </div>
       <div class="dog-card-body">
         <h3>${dog.name}</h3>
         <p>${[dog.breed, ageLabel(dog.age_months)].filter(Boolean).join(" · ")}</p>
