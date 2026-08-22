@@ -114,7 +114,7 @@ async function loadApplications(userId) {
 async function loadSaved(userId) {
   const { data, error } = await supabase
     .from("saved_dogs")
-    .select("id, dogs(id, name, breed, age_months, status, hidden_at, shelters(name), dog_photos(url))")
+    .select("id, dogs(id, name, breed, age_months, status, hidden_at, shelters(name, city), dog_photos(url))")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
@@ -138,15 +138,15 @@ async function loadSaved(userId) {
       const unavailable = dog.hidden_at || dog.status !== "available";
       return `
       <a href="dog-detail?id=${dog.id}" class="dog-card" style="text-decoration: none; display: block;">
-        <div class="dog-photo-wrap">
-          <div class="dog-avatar-ring ${unavailable ? "" : "available"}">
-            ${photoUrl ? `<img src="${photoUrl}" alt="${dog.name}" loading="lazy">` : `<div class="dog-card-noimg">🐶</div>`}
-          </div>
+        <div class="dog-card-photo-frame">
+          ${photoUrl ? `<img src="${photoUrl}" alt="${dog.name}" loading="lazy">` : `<div class="dog-card-noimg">🐶</div>`}
         </div>
         <div class="dog-card-body">
           <h3>${dog.name}</h3>
           <p>${[dog.breed, ageLabel(dog.age_months)].filter(Boolean).join(" · ")}</p>
-          <p class="dog-card-shelter">${unavailable ? '<span class="tag tag-neutral">No longer available</span>' : dog.shelters.name}</p>
+          ${unavailable
+            ? '<span class="tag tag-neutral">No longer available</span>'
+            : `<span class="tag tag-sage">${dog.shelters.name}${dog.shelters.city ? ` · ${dog.shelters.city}` : ""}</span>`}
         </div>
       </a>
     `;
