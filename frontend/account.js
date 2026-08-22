@@ -135,7 +135,15 @@ async function loadSaved(userId) {
   grid.innerHTML = data
     .map(({ dogs: dog }) => {
       const photoUrl = dog.dog_photos[0]?.url ?? "";
-      const unavailable = dog.hidden_at || dog.status !== "available";
+      const unavailable = dog.hidden_at || (dog.status !== "available" && dog.status !== "pending");
+      let badge;
+      if (unavailable) {
+        badge = '<span class="tag tag-neutral">No longer available</span>';
+      } else if (dog.status === "pending") {
+        badge = '<span class="tag tag-gold">Pending adoption</span>';
+      } else {
+        badge = `<span class="tag tag-sage">${dog.shelters.name}${dog.shelters.city ? ` · ${dog.shelters.city}` : ""}</span>`;
+      }
       return `
       <a href="dog-detail?id=${dog.id}" class="dog-card" style="text-decoration: none; display: block;">
         <div class="dog-card-photo-frame">
@@ -144,9 +152,7 @@ async function loadSaved(userId) {
         <div class="dog-card-body">
           <h3>${dog.name}</h3>
           <p>${[dog.breed, ageLabel(dog.age_months)].filter(Boolean).join(" · ")}</p>
-          ${unavailable
-            ? '<span class="tag tag-neutral">No longer available</span>'
-            : `<span class="tag tag-sage">${dog.shelters.name}${dog.shelters.city ? ` · ${dog.shelters.city}` : ""}</span>`}
+          ${badge}
         </div>
       </a>
     `;

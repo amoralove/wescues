@@ -44,8 +44,8 @@ initPillGroup(ageGroup, (value) => {
 async function loadDogs() {
   const { data, error } = await supabase
     .from("dogs")
-    .select("id, name, breed, age_months, sex, size, description, shelter_id, shelters(name, city, state), dog_photos(url)")
-    .eq("status", "available")
+    .select("id, name, breed, age_months, sex, size, status, description, shelter_id, shelters(name, city, state), dog_photos(url)")
+    .in("status", ["available", "pending"])
     .is("hidden_at", null)
     .order("created_at", { ascending: false });
 
@@ -109,6 +109,9 @@ function render() {
   for (const dog of filtered) {
     const photoUrl = dog.dog_photos[0]?.url ?? "";
     const isSaved = savedDogIds.has(dog.id);
+    const badge = dog.status === "pending"
+      ? `<span class="tag tag-gold">Pending adoption</span>`
+      : `<span class="tag tag-sage">${dog.shelters.name}${dog.shelters.city ? ` · ${dog.shelters.city}` : ""}</span>`;
     const card = document.createElement("div");
     card.className = "dog-card";
     card.innerHTML = `
@@ -119,7 +122,7 @@ function render() {
       <div class="dog-card-body">
         <h3>${dog.name}</h3>
         <p>${[dog.breed, ageLabel(dog.age_months)].filter(Boolean).join(" · ")}</p>
-        <span class="tag tag-sage">${dog.shelters.name}${dog.shelters.city ? ` · ${dog.shelters.city}` : ""}</span>
+        ${badge}
       </div>
     `;
     card.addEventListener("click", (e) => {
